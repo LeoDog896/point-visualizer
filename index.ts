@@ -2,14 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const hash = window.location.hash.substring(1);
-const parsedHash = hash.split(",").map((x) => parseFloat(x)).reduce<number[][]>((acc, val, i) => {
-    if (i % 3 === 0) {
-        acc.push([val]);
-    } else {
-        acc[acc.length - 1].push(val);
-    }
-    return acc;
-}, []);
+const parsedHash = decodeURIComponent(hash).split(";").map((x) => x.split(",").map((y) => parseFloat(y)));
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -45,6 +38,6 @@ function animate() {
 animate();
 
 globalThis.pointsToHash = (points: number[][]) => {
-    window.location.hash = points.map((x) => x.join(",")).join(",");
+    window.location.hash = encodeURIComponent(points.map((x) => x.join(",")).join(";"))
 }
 
